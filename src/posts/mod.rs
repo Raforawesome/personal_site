@@ -95,12 +95,43 @@ pub fn Animation(
     }
 }
 
-/// A code block. `code` is shown as-is.
+/// A code block, highlighted on the server. `lang` is a syntect language
+/// token such as `"rust"`; unknown languages are shown as plain text.
 #[component]
-pub fn Code(code: &'static str) -> impl IntoView {
+pub fn Code(lang: &'static str, code: &'static str) -> impl IntoView {
     view! {
         <pre>
-            <code>{code}</code>
+            <code inner_html=highlight(lang, code)></code>
         </pre>
     }
+}
+
+/// Wraps tokens in `<span class="hl-…">`; the colours live in main.css.
+#[cfg(feature = "ssr")]
+fn highlight(lang: &str, code: &str) -> String {
+    use std::sync::LazyLock;
+    use syntect::html::{ClassStyle, ClassedHTMLGenerator};
+    use syntect::parsing::SyntaxSet;
+    use syntect::util::LinesWithEndings;
+
+    static SYNTAXES: LazyLock<SyntaxSet> = LazyLock::new(SyntaxSet::load_defaults_newlines);
+    let syntax = SYNTAXES
+        .find_syntax_by_token(lang)
+        .unwrap_or_else(|| SYNTAXES.find_syntax_plain_text());
+    let mut html = ClassedHTMLGenerator::new_with_class_style(
+        syntax,
+        &SYNTAXES,
+        ClassStyle::SpacedPrefixed { prefix: "hl-" },
+    );
+    for line in LinesWithEndings::from(code) {
+        // Only fails on a broken grammar, which the bundled ones aren't.
+        let _ = html.parse_html_for_line_which_includes_newline(line);
+    }
+    html.finalize()
+}
+
+/// Posts only render on the server, so the client never needs this.
+#[cfg(not(feature = "ssr"))]
+fn highlight(_lang: &str, _code: &str) -> String {
+    String::new()
 }

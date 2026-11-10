@@ -540,3 +540,12 @@ a.row:hover .row-title { color: var(--accent); }
   padding: 0.1em 0.3em;
   background-color: var(--panel);
 }
+
+/* code highlighting (classes from syntect, added on the server) */
+.article pre code { color: var(--body); }
+.hl-comment { color: var(--muted); }
+.hl-keyword, .hl-storage { color: var(--accent); }
+.hl-constant, .hl-string { color: #d9b38c; }
+.hl-entity.hl-name.hl-function, .hl-support.hl-function { color: var(--fg); }
+.hl-storage.hl-type, .hl-support.hl-type, .hl-entity.hl-name.hl-type { color: #9cc2ad; }
+.hl-punctuation, .hl-operator { color: var(--muted); }

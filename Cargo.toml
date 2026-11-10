@@ -17,6 +17,8 @@ leptos_axum = { version = "0.8", optional = true }
 axum = { version = "0.8", optional = true }
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "net"], optional = true }
 tower-http = { version = "0.6", features = ["compression-br", "compression-gzip"], optional = true }
+# server only: highlights blog code blocks while rendering
+syntect = { version = "5", optional = true, default-features = false, features = ["default-syntaxes", "html", "regex-fancy"] }
 
 # client only (islands)
 wasm-bindgen = { version = "0.2", optional = true }
@@ -43,6 +45,7 @@ ssr = [
   "dep:tokio",
   "dep:tower-http",
   "dep:leptos_axum",
+  "dep:syntect",
   "leptos/ssr",
   "leptos_meta/ssr",
   "leptos_router/ssr",

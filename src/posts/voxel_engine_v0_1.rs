@@ -112,7 +112,7 @@ fn body() -> AnyView {
             <p>
                 "Profiling didn’t point me to this one, but even small things matter. Chunks are flat 4 KB arrays laid out x → y → z. My loops originally went x, y, z from the outside in, the way most people would write them, so every step of the inner loop jumped 256 bytes through memory. Flipping the order to z outermost and x innermost makes the inner loop walk memory in a straight line."
             </p>
-            <Code code=LOOP_ORDER/>
+            <Code lang="rust" code=LOOP_ORDER/>
             <Animation
                 src=media!("cache_iteration.mp4")
                 poster=media!("cache_iteration.jpg")
@@ -151,9 +151,10 @@ fn body() -> AnyView {
             <p>
                 "There’s no normal, because the face id implies it, and no block type: the fragment shader looks that up in a per-chunk 16³ block texture. Packing on the CPU is a few shifts:"
             </p>
-            <Code code=PACK_RUST/>
+            <Code lang="rust" code=PACK_RUST/>
             <p>"and the vertex shader undoes it:"</p>
-            <Code code=UNPACK_SLANG/>
+            // Slang has no grammar here, but this snippet reads fine as Rust.
+            <Code lang="rust" code=UNPACK_SLANG/>
             <Animation
                 src=media!("vertex_packing.mp4")
                 poster=media!("vertex_packing.jpg")
