@@ -4,11 +4,7 @@ use leptos_meta::{Meta, Title};
 use crate::content::{HANDLE, TAGLINE};
 use crate::islands::terrain::Terrain;
 
-const DOORS: &[(&str, &str, &str)] = &[
-    ("01", "Projects", "/projects"),
-    ("02", "Blog", "/blog"),
-    ("03", "Tools", "/tools"),
-];
+const DOORS: &[(&str, &str, &str)] = &[("01", "Projects", "/projects"), ("02", "Blog", "/blog")];
 
 /// Seed for the terrain: the server's date, so every visitor sees the same
 /// world on a given day.

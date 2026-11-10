@@ -522,3 +522,21 @@ a.row:hover .row-title { color: var(--accent); }
 .nowrap { white-space: nowrap; }
 .prose + .prose { margin-top: 1em; }
 .caption a { color: var(--fg); }
+
+/* blog post extras */
+.post-video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  background-color: var(--panel);
+}
+.article ul { margin: 0 0 1.2em; padding-left: 1.2em; font-size: 19px; line-height: 1.7; color: var(--body); }
+.article li + li { margin-top: 0.3em; }
+.article strong { color: var(--fg); font-weight: 600; }
+.article :not(pre) > code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  padding: 0.1em 0.3em;
+  background-color: var(--panel);
+}

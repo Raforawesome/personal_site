@@ -8,7 +8,7 @@ use crate::content::{GITHUB, HANDLE};
 const NAV: &[(&str, &str, &str)] = &[
     ("projects", "Projects", "/projects"),
     ("blog", "Blog", "/blog"),
-    ("tools", "Tools", "/tools"),
+    // Tools is hidden until the page is reworked; see pages/tools.rs.
     ("who", "Who?", "/who"),
 ];
 

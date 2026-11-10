@@ -10,7 +10,6 @@ use crate::pages::{
     home::Home,
     not_found::NotFound,
     projects::{ProjectDetail, ProjectsIndex},
-    tools::Tools,
     who::Who,
 };
 
@@ -53,7 +52,7 @@ pub fn App() -> impl IntoView {
                 <Route path=path!("/projects/:slug") view=ProjectDetail/>
                 <Route path=path!("/blog") view=BlogIndex/>
                 <Route path=path!("/blog/:slug") view=BlogPost/>
-                <Route path=path!("/tools") view=Tools/>
+                // /tools is hidden until the page is reworked (pages/tools.rs).
                 <Route path=path!("/who") view=Who/>
             </Routes>
         </Router>

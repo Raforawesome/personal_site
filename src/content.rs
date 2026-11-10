@@ -38,24 +38,6 @@ pub const PROJECTS: &[Project] = &[
     },
 ];
 
-pub struct Post {
-    pub slug: &'static str,
-    pub date: &'static str,
-    pub read: &'static str,
-    pub tags: &'static str,
-    pub title: &'static str,
-    pub blurb: &'static str,
-}
-
-pub const POSTS: &[Post] = &[Post {
-    slug: "voxel-engine-v0-1",
-    date: "[Date]",
-    read: "[N] min read",
-    tags: "rust, wgpu",
-    title: "Voxel engine v0.1 writeup",
-    blurb: "How chunks are generated, meshed and streamed, and what each stage costs.",
-}];
-
 pub struct Tool {
     pub href: Option<&'static str>,
     pub kind: &'static str,

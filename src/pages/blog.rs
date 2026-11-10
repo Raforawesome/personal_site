@@ -1,9 +1,11 @@
+//! The blog index and post pages. The posts themselves live in `src/posts/`.
+
 use leptos::prelude::*;
 use leptos_router::hooks::use_params_map;
 
 use crate::components::{Breadcrumb, ListRow, Page, PageHead};
-use crate::content::{POSTS, Post};
 use crate::pages::not_found::NotFound;
+use crate::posts::{self, Post};
 
 #[component]
 pub fn BlogIndex() -> impl IntoView {
@@ -11,7 +13,7 @@ pub fn BlogIndex() -> impl IntoView {
         <Page current="blog" title="Blog".into()>
             <PageHead title="Blog"/>
             <section aria-label="Posts" class="rows">
-                {POSTS
+                {posts::ALL
                     .iter()
                     .map(|p| {
                         view! {
@@ -36,18 +38,12 @@ pub fn BlogPost() -> impl IntoView {
         .read_untracked()
         .get("slug")
         .unwrap_or_default();
-    let Some(idx) = POSTS.iter().position(|p| p.slug == slug) else {
+    let Some((idx, post)) = posts::find(&slug) else {
         return view! { <NotFound/> }.into_any();
     };
-    let post = &POSTS[idx];
-    // POSTS is newest first: "previous" is older (later in the list).
-    let prev = POSTS.get(idx + 1);
-    let next = idx.checked_sub(1).and_then(|i| POSTS.get(i));
-
-    let body = match post.slug {
-        "voxel-engine-v0-1" => view! { <VoxelWriteup/> }.into_any(),
-        _ => ().into_any(),
-    };
+    // posts::ALL is newest first: "previous" is older (later in the list).
+    let prev = posts::ALL.get(idx + 1);
+    let next = idx.checked_sub(1).and_then(|i| posts::ALL.get(i));
 
     view! {
         <Page current="blog" title=post.title.to_string() description=post.blurb>
@@ -58,7 +54,7 @@ pub fn BlogPost() -> impl IntoView {
                     {post.date} " · " {post.read} " · " {post.tags}
                 </p>
             </header>
-            {body}
+            {(post.body)()}
             <PostNav prev next/>
         </Page>
     }
@@ -78,62 +74,4 @@ fn PostNav(prev: Option<&'static Post>, next: Option<&'static Post>) -> impl Int
         </nav>
     }
     .into_any()
-}
-
-/// Two-column layout: table of contents beside the article.
-#[component]
-fn PostLayout(toc: &'static [(&'static str, &'static str)], children: Children) -> impl IntoView {
-    view! {
-        <div class="post-layout">
-            <aside aria-label="On this page" class="toc">
-                <p class="toc-label">"On this page"</p>
-                <ol>
-                    {toc
-                        .iter()
-                        .map(|&(id, label)| view! { <li><a href=format!("#{id}")>{label}</a></li> })
-                        .collect_view()}
-                </ol>
-            </aside>
-            <article class="article">{children()}</article>
-        </div>
-    }
-}
-
-#[component]
-fn VoxelWriteup() -> impl IntoView {
-    view! {
-        <PostLayout toc=&[("s1", "[Section]"), ("s2", "[Section]"), ("s3", "[Section]")]>
-            <p class="intro">
-                "[Opening paragraph. State the problem and what you found in two or three sentences.]"
-            </p>
-
-            <h2 id="s1">"[Section heading]"</h2>
-            <p>
-                "[Body paragraph. Prose is set in a serif at about 19px with a 66-character line, so long posts stay readable.]"
-            </p>
-            <p>
-                "[Another paragraph, with an " <a href="#">"inline link"</a> " and a footnote marker"
-                <sup>
-                    <a href="#fn1" class="fn-ref">"1"</a>
-                </sup> ".]"
-            </p>
-            <pre>
-                <code>
-                    "// [code from the post]\nfn mesh_chunk(chunk: &Chunk) -> Mesh {\n    todo!()\n}"
-                </code>
-            </pre>
-
-            <h2 id="s2">"[Section heading]"</h2>
-            <p>"[Body paragraph.]"</p>
-            <figure class="fig">
-                <div class="placeholder mono">"Figure or chart"</div>
-                <figcaption class="caption">"Figure 1. [Caption.]"</figcaption>
-            </figure>
-
-            <h2 id="s3">"[Section heading]"</h2>
-            <p>"[Closing paragraph.]"</p>
-
-            <p id="fn1" class="footnote">"1. [Footnote text.]"</p>
-        </PostLayout>
-    }
 }
