@@ -1,1 +1,5 @@
 /target
+/.tools
+
+# Built by deploy.sh (or ../between-wgpu/web/build.sh); see README
+/public/demo/voxel/

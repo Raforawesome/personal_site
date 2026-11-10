@@ -24,10 +24,14 @@ fn has_webgpu() -> bool {
 }
 
 #[island]
-pub fn RunDemo(src: String) -> impl IntoView {
+pub fn RunDemo(src: String, poster: String, poster_alt: String) -> impl IntoView {
     let (state, set_state) = signal(State::Poster);
     let start = move |_| {
-        set_state.set(if has_webgpu() { State::Running } else { State::NoWebGpu });
+        set_state.set(if has_webgpu() {
+            State::Running
+        } else {
+            State::NoWebGpu
+        });
     };
 
     view! {
@@ -46,8 +50,14 @@ pub fn RunDemo(src: String) -> impl IntoView {
                 }
                 State::Poster => {
                     view! {
-                        <p class="mono demo-note">"Poster frame (10-second loop)"</p>
-                        <button type="button" class="btn-accent" on:click=start>
+                        <img
+                            class="demo-poster"
+                            src=poster.clone()
+                            alt=poster_alt.clone()
+                            loading="lazy"
+                            decoding="async"
+                        />
+                        <button type="button" class="btn-accent demo-run" on:click=start>
                             "Run it in your browser"
                         </button>
                     }

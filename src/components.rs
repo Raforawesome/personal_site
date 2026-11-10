@@ -68,7 +68,10 @@ pub fn Page(
 }
 
 #[component]
-pub fn PageHead(title: &'static str, #[prop(optional)] lede: Option<&'static str>) -> impl IntoView {
+pub fn PageHead(
+    title: &'static str,
+    #[prop(optional)] lede: Option<&'static str>,
+) -> impl IntoView {
     view! {
         <section class="page-head">
             <h1 class="h-page">{title}</h1>

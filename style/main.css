@@ -309,7 +309,17 @@ a.row:hover .row-title { color: var(--accent); }
   padding: 24px;
   overflow: hidden;
 }
+.demo-frame { position: relative; }
 .demo-frame:has(.demo-iframe) { padding: 0; }
+.demo-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.62);
+}
+.demo-run { position: relative; }
 .demo-iframe { width: 100%; height: 100%; border: 0; display: block; }
 .demo-note {
   margin: 0;
@@ -502,3 +512,13 @@ a.row:hover .row-title { color: var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   .terrain-caption { transition: none; }
 }
+
+/* server-rendered charts */
+.chart { display: block; width: 100%; max-width: 640px; height: auto; }
+.chart .bar { fill: #55625C; }
+.chart .bar--default { fill: var(--accent); }
+.chart-label, .chart-value { font-family: var(--mono); font-size: 13px; fill: var(--muted); }
+.chart-value { fill: var(--fg); }
+.nowrap { white-space: nowrap; }
+.prose + .prose { margin-top: 1em; }
+.caption a { color: var(--fg); }

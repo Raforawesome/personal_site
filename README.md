@@ -16,27 +16,58 @@ cargo leptos watch
 
 ## Deploy
 
-```bash
-cargo leptos build --release
-```
-
-Copy `target/release/personal_site` and the `target/site/` directory to the
-server, then run the binary with:
+On the server (needs `rustup`, `git` and `curl`):
 
 ```bash
-LEPTOS_OUTPUT_NAME=personal_site \
-LEPTOS_SITE_ROOT=site \
-LEPTOS_SITE_PKG_DIR=pkg \
-LEPTOS_SITE_ADDR=127.0.0.1:3000 \
-LEPTOS_ENV=PROD \
-./personal_site
+git clone https://github.com/Raforawesome/personal_site.git
+cd personal_site
+./deploy.sh
 ```
 
-Put it behind your reverse proxy (Caddy/nginx) for TLS. Responses are
-compressed (br/gzip) by the app itself.
+`deploy.sh` installs what's missing (nightly Rust, the wasm target,
+cargo-leptos, wasm-bindgen-cli, Slang), clones
+[between-wgpu](https://github.com/Raforawesome/between-wgpu) next to the site
+and builds the voxel engine demo if it isn't built yet, builds the site in
+release mode, then serves it on `127.0.0.1:3000` (`SITE_ADDR` changes that).
+The first run takes a while; later runs only rebuild what changed. Pass
+`--rebuild-demo` to pull and rebuild the engine demo. Put it behind your
+reverse proxy (Caddy/nginx) for TLS; the app compresses responses itself.
 
-## Still to supply
+To keep it running across reboots, let systemd run the built binary and use
+`./deploy.sh --build-only` for updates:
 
-- `public/resume.pdf` (linked from /who)
-- The engine's web build in `public/demo/voxel/` (loaded in an iframe only
-  when the visitor presses the button)
+```ini
+# /etc/systemd/system/personal-site.service
+[Service]
+WorkingDirectory=/path/to/personal_site
+ExecStart=/path/to/personal_site/target/release/personal_site
+Environment=LEPTOS_SITE_ADDR=127.0.0.1:3000
+User=you
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+git pull && ./deploy.sh --build-only && sudo systemctl restart personal-site
+```
+
+## Voxel engine demo
+
+`public/demo/voxel/` holds the WebGPU build of the engine. It's a build output,
+so it isn't in git; `deploy.sh` builds it. It loads in an iframe only when the
+visitor presses the button. To build it by hand:
+
+```bash
+../between-wgpu/web/build.sh "$PWD/public/demo/voxel"
+```
+
+## Résumé
+
+`public/resume.pdf` is built from `resume/resume.typ`, a public copy with only
+details that are already on the site:
+
+```bash
+typst compile resume/resume.typ public/resume.pdf
+```

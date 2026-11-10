@@ -95,13 +95,21 @@ pub struct ContactLink {
 }
 
 pub const CONTACT: &[ContactLink] = &[
-    ContactLink { label: "Résumé", text: "PDF →", href: "/resume.pdf" },
+    ContactLink {
+        label: "Résumé",
+        text: "PDF →",
+        href: "/resume.pdf",
+    },
     ContactLink {
         label: "Email",
         text: "raforawesome@raforaweso.me →",
         href: "mailto:raforawesome@raforaweso.me",
     },
-    ContactLink { label: "GitHub", text: "Raforawesome →", href: GITHUB },
+    ContactLink {
+        label: "GitHub",
+        text: "Raforawesome →",
+        href: GITHUB,
+    },
     ContactLink {
         label: "LinkedIn",
         text: "linkedin.com/in/tchaudhry-dev →",

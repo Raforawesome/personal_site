@@ -92,7 +92,11 @@ fn draw_order() -> Vec<(usize, usize)> {
 }
 
 fn mix(a: [f64; 3], b: [f64; 3], t: f64) -> [f64; 3] {
-    [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]
+    [
+        a[0] + (b[0] - a[0]) * t,
+        a[1] + (b[1] - a[1]) * t,
+        a[2] + (b[2] - a[2]) * t,
+    ]
 }
 
 fn css(c: [f64; 3], k: f64) -> String {
@@ -111,7 +115,13 @@ fn pts(p: [(f64, f64); 4]) -> String {
         .join(" ")
 }
 
-fn compute(base: &[i32], order: &[(usize, usize)], tick: u32, ptr: (i32, i32), built: &[i32]) -> Frame {
+fn compute(
+    base: &[i32],
+    order: &[(usize, usize)],
+    tick: u32,
+    ptr: (i32, i32),
+    built: &[i32],
+) -> Frame {
     let mid = (N as f64 - 1.0) / 2.0;
     let ring = (f64::from(tick) * 0.45) % 17.0;
     let (px, py) = ptr;
@@ -155,7 +165,8 @@ fn compute(base: &[i32], order: &[(usize, usize)], tick: u32, ptr: (i32, i32), b
             let t = (fh - 1.0) / f64::from(MAXH - 1);
             let top_c = mix(mix(LOW, HIGH, t), ACC, heat * 0.9);
             let (si, sj) = (ci as isize, cj as isize);
-            let nb = (h_at(si - 1, sj) + h_at(si + 1, sj) + h_at(si, sj - 1) + h_at(si, sj + 1)) / 4.0;
+            let nb =
+                (h_at(si - 1, sj) + h_at(si + 1, sj) + h_at(si, sj - 1) + h_at(si, sj + 1)) / 4.0;
             let occl = ((nb - fh) * 0.09).clamp(0.0, 0.3);
             let haze = 0.6 + 0.4 * ((ci + cj) as f64 / (2.0 * (N as f64 - 1.0)));
             let mut k = haze * (1.0 - occl);
@@ -165,7 +176,12 @@ fn compute(base: &[i32], order: &[(usize, usize)], tick: u32, ptr: (i32, i32), b
             let dd = fh * ZH;
             Cell {
                 visible: true,
-                top: pts([(cx, cy), (cx + HW, cy + HH), (cx, cy + TH), (cx - HW, cy + HH)]),
+                top: pts([
+                    (cx, cy),
+                    (cx + HW, cy + HH),
+                    (cx, cy + TH),
+                    (cx - HW, cy + HH),
+                ]),
                 left: pts([
                     (cx - HW, cy + HH),
                     (cx, cy + TH),
@@ -242,7 +258,10 @@ pub fn Terrain(seed: u32) -> impl IntoView {
         let sy = VY + (f64::from(e.client_y()) - rc.top()) / rc.height() * VH;
         let a = (sx - OX) / HW;
         let b = (sy - OY - HH + 5.0 * ZH) / HH;
-        Some((((a + b) / 2.0).round() as i32, ((b - a) / 2.0).round() as i32))
+        Some((
+            ((a + b) / 2.0).round() as i32,
+            ((b - a) / 2.0).round() as i32,
+        ))
     };
 
     let on_move = move |e: leptos::ev::MouseEvent| {

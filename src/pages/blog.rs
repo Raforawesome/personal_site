@@ -32,7 +32,10 @@ pub fn BlogIndex() -> impl IntoView {
 
 #[component]
 pub fn BlogPost() -> impl IntoView {
-    let slug = use_params_map().read_untracked().get("slug").unwrap_or_default();
+    let slug = use_params_map()
+        .read_untracked()
+        .get("slug")
+        .unwrap_or_default();
     let Some(idx) = POSTS.iter().position(|p| p.slug == slug) else {
         return view! { <NotFound/> }.into_any();
     };
