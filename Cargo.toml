@@ -1,0 +1,71 @@
+[package]
+name = "personal_site"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+leptos = { version = "0.8.23", features = ["islands"] }
+leptos_router = "0.8"
+leptos_meta = "0.8"
+serde = { version = "1", features = ["derive"] }
+
+# server only
+leptos_axum = { version = "0.8", optional = true }
+axum = { version = "0.8", optional = true }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net"], optional = true }
+tower-http = { version = "0.6", features = ["compression-br", "compression-gzip"], optional = true }
+
+# client only (islands)
+wasm-bindgen = { version = "0.2", optional = true }
+js-sys = { version = "0.3", optional = true }
+console_error_panic_hook = { version = "0.1", optional = true }
+web-sys = { version = "0.3", features = [
+  "Element",
+  "DomRect",
+  "SvgsvgElement",
+  "MediaQueryList",
+  "Window",
+  "Navigator",
+] }
+
+[features]
+hydrate = [
+  "leptos/hydrate",
+  "dep:wasm-bindgen",
+  "dep:js-sys",
+  "dep:console_error_panic_hook",
+]
+ssr = [
+  "dep:axum",
+  "dep:tokio",
+  "dep:tower-http",
+  "dep:leptos_axum",
+  "leptos/ssr",
+  "leptos_meta/ssr",
+  "leptos_router/ssr",
+]
+
+[profile.wasm-release]
+inherits = "release"
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[package.metadata.leptos]
+output-name = "personal_site"
+site-root = "target/site"
+site-pkg-dir = "pkg"
+style-file = "style/main.css"
+assets-dir = "public"
+site-addr = "127.0.0.1:3000"
+reload-port = 3001
+env = "DEV"
+bin-features = ["ssr"]
+bin-default-features = false
+lib-features = ["hydrate"]
+lib-default-features = false
+lib-profile-release = "wasm-release"
