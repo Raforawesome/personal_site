@@ -44,7 +44,6 @@ pub fn ProjectDetail() -> impl IntoView {
 }
 
 const REPO: &str = "https://github.com/Raforawesome/between-wgpu";
-const THREAD: &str = "https://x.com/raforawesome/status/2114935770566062370";
 const PERF: &str = "https://github.com/Raforawesome/between-wgpu/blob/master/docs/performance.md";
 
 const STAGES: &[(&str, &str, &str)] = &[
@@ -179,7 +178,7 @@ fn VoxelEngine() -> impl IntoView {
                 <div>
                     <dt>"Write-up"</dt>
                     <dd>
-                        <a class="fact-link" href=THREAD>"Thread on X"</a>
+                        <a class="fact-link" href="/blog/voxel-engine-v0-1">"Blog post"</a>
                     </dd>
                 </div>
                 <div>
