@@ -45,7 +45,7 @@ pub fn ProjectDetail() -> impl IntoView {
 
 const REPO: &str = "https://github.com/Raforawesome/between-wgpu";
 const THREAD: &str = "https://x.com/raforawesome/status/2114935770566062370";
-const PERF: &str = "https://github.com/Raforawesome/between-wgpu/blob/main/docs/performance.md";
+const PERF: &str = "https://github.com/Raforawesome/between-wgpu/blob/master/docs/performance.md";
 
 const STAGES: &[(&str, &str, &str)] = &[
     (
@@ -75,12 +75,12 @@ const STAGES: &[(&str, &str, &str)] = &[
     ),
 ];
 
-/// (stage, cost, notes). All CPU figures are single-machine (Apple M2).
+/// (stage, cost, notes). All figures are from one machine (MacBook Air, M2).
 const MEASUREMENTS: &[(&str, &str, &str)] = &[
     (
         "Generation",
         "18.5 µs / chunk",
-        "One thread, 2,048 chunks. 4.2× faster on 4 threads, 5.9× on 8.",
+        "One thread, 2,048 chunks. 4.2× faster on 4 threads, 5.9× on 8 (see Figure 2).",
     ),
     (
         "Meshing",
@@ -222,10 +222,10 @@ fn VoxelEngine() -> impl IntoView {
                 <p class="caption">"Figure 1. Chunk pipeline."</p>
             </section>
 
-            <section aria-labelledby="problem" class="sec prose-col">
-                <h2 id="problem" class="h-sec">"Problem"</h2>
+            <section aria-labelledby="goal" class="sec prose-col">
+                <h2 id="goal" class="h-sec">"The Goal"</h2>
                 <p class="prose">
-                    "The default view is 32 × 12 × 32 chunks: 12,288 chunks and about 50 million voxels around the camera. All of it has to be generated, meshed and uploaded without the frame rate noticing, and it has to keep up while the player flies into new terrain at sprint speed."
+                    "Keep a 32 × 12 × 32-chunk view around the camera (12,288 chunks, about 50 million voxels) generated, meshed and on the GPU without the frame rate noticing, including while flying into new terrain at sprint speed."
                 </p>
             </section>
 
@@ -242,7 +242,7 @@ fn VoxelEngine() -> impl IntoView {
             <section aria-labelledby="measurements" class="sec">
                 <h2 id="measurements" class="h-sec">"Measurements"</h2>
                 <p class="prose prose-col">
-                    "Apple M2 (8 logical cores), macOS, nightly rustc, release profile, seed 42, camera at spawn. CPU figures come from a std-only harness with a counting allocator: median of 5 runs after a warm-up. Frame times come from a scripted camera route through the real renderer and are wall-clock frame intervals, not isolated GPU time. "
+                    "MacBook Air, M2 (4 performance + 4 efficiency cores), macOS, nightly rustc, release profile, seed 42, camera at spawn. CPU figures come from a std-only harness with a counting allocator: median of 5 runs after a warm-up. Frame times come from a scripted camera route through the real renderer and are wall-clock frame intervals, not isolated GPU time. "
                     <a href=PERF>"Full report and caveats"</a>
                     "."
                 </p>
@@ -274,18 +274,18 @@ fn VoxelEngine() -> impl IntoView {
                 <figure class="fig">
                     <ScalingChart/>
                     <figcaption class="caption">
-                        "Figure 2. Wall time to generate the default 12,288-chunk region, by worker count. Near-linear to 4 threads (the app’s default, highlighted); 74% efficiency at 8, likely the M2’s 4 performance + 4 efficiency cores."
+                        "Figure 2. Wall time to generate the default 12,288-chunk region, by worker count. Scaling is near-linear up to 4 threads (the app’s default, highlighted). The jump to 8 only reaches 5.9×, 74% efficiency, most likely because the M2 in a MacBook Air has 4 performance and 4 efficiency cores: past four threads, the extra work lands on the slower cores."
                     </figcaption>
                 </figure>
             </section>
 
-            <section aria-labelledby="change" class="sec prose-col">
-                <h2 id="change" class="h-sec">"What I’d change"</h2>
+            <section aria-labelledby="next" class="sec prose-col">
+                <h2 id="next" class="h-sec">"What’s next"</h2>
                 <p class="prose">
-                    "Meshing is next. It emits one quad per visible face, not greedy-meshed runs, and that’s where most of the remaining vertex count and meshing time goes. Mesh uploads also aren’t budgeted per frame, so the first load has a few long frames (78 ms at worst) before it settles."
+                    "Meshing comes first. The mesher emits one quad per visible face rather than greedy-meshed runs, and that’s where most of the remaining vertex count and meshing time goes. After that, budgeting mesh uploads per frame: today the first load has a few long frames (78 ms at worst) before it settles."
                 </p>
                 <p class="prose">
-                    "Generated chunks are never evicted from the CPU, about 56 MiB at the default view and growing as you travel. Generation also covers only the render region with no neighbour halo, so chunks on the boundary can stay unmeshed until you move."
+                    "Then memory and edges. Generated chunks are never evicted from the CPU (about 56 MiB at the default view, growing as you travel), and generation covers only the render region with no neighbour halo, so chunks on the boundary can stay unmeshed until you move."
                 </p>
             </section>
 

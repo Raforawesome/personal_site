@@ -36,13 +36,6 @@ pub const PROJECTS: &[Project] = &[
         title: "Silk",
         blurb: "An HTTP parser. Early, and being fleshed out.",
     },
-    Project {
-        slug: None,
-        stack: "Rust",
-        status: "[Status]",
-        title: "Ferrum Automata",
-        blurb: "Finite-automata toolkit: subset construction and Hopcroft minimization.",
-    },
 ];
 
 pub struct Post {
